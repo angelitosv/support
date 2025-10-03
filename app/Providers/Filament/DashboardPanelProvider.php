@@ -23,7 +23,7 @@ class DashboardPanelProvider extends PanelProvider
     public function panel(Panel $panel): Panel
     {
         return $panel
-            ->brandName('Support plates')
+            ->brandName('Support Plates')
             ->topbar(false)
             ->default()
             ->id('dashboard')
