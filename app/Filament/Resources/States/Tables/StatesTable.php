@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\States\Tables;
 
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
@@ -32,7 +33,8 @@ class StatesTable
                 //
             ])
             ->recordActions([
-                EditAction::make(),
+                EditAction::make()->button(),
+                DeleteAction::make()->button(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

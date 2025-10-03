@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Filament\Support\Enums\FontWeight;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class PlatesTable
@@ -29,8 +30,8 @@ class PlatesTable
                 TextColumn::make('state.name')->label('State')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
-                        'Registrada' => 'success',
-                        'Desconocida' => 'danger',
+                        'autorizada' => 'success',
+                        'indefinida' => 'danger',
                     }),
                 IconColumn::make('active')->boolean(),
                 TextColumn::make('created_at')
@@ -43,13 +44,17 @@ class PlatesTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                SelectFilter::make('owner.name')
+                    ->label('Owner')
+                    ->relationship('owner', 'name'),
+
+
             ])
-            ->defaultSort(
-                function (Builder $query): Builder {
-                    return $query
-                        ->orderBy('plate');
-                }            
+            ->modifyQueryUsing(fn (Builder $query) => $query
+                ->join('owners', 'plates.owner_id', '=', 'owners.id')
+                ->select('plates.*')
+                ->orderBy('owners.name')
+                ->orderBy('plates.plate')
             )
             ->recordActions([
                 EditAction::make(),

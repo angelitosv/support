@@ -7,6 +7,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Support\Enums\FontWeight;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class RegistersTable
@@ -21,7 +22,7 @@ class RegistersTable
                     ->label('ID')
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('work_date')
-                    ->date()
+                    ->date('d/m/Y')
                     ->sortable(),
                 TextColumn::make('plate.plate')
                     ->label('Plate')
@@ -33,8 +34,8 @@ class RegistersTable
                     ->label('State')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
-                        'Registrada' => 'success',
-                        'Desconocida' => 'danger',
+                        'autorizada' => 'success',
+                        'indefinida' => 'danger',
                     }),
                 TextColumn::make('created_at')
                     ->dateTime()
@@ -46,8 +47,17 @@ class RegistersTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
-            ])
+                SelectFilter::make('plate.owner.name')
+                    ->label('Owner')
+                    ->relationship('plate.owner', 'name'),
+                SelectFilter::make('plate.state.name')
+                    ->label('State')
+                    ->relationship('plate.state', 'name')
+                    ->options([
+                        'autorizada' => 'Autorizada',
+                        'indefinida' => 'Indefinida',
+                    ]),
+                ])
             ->recordActions([
                 EditAction::make(),
             ])
