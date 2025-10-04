@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use Filament\FontProviders\GoogleFontProvider;
+use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -24,6 +25,7 @@ class DashboardPanelProvider extends PanelProvider
     {
         return $panel
             ->brandName('Support Plates')
+            ->favicon(asset('images/favicon.ico'))
             ->topbar(false)
             ->default()
             ->id('dashboard')
@@ -45,6 +47,10 @@ class DashboardPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
+            ])
+            ->plugins([
+                FilamentShieldPlugin::make()
+                ->navigationGroup('Support Shield'),
             ])
             ->authMiddleware([
                 Authenticate::class,
